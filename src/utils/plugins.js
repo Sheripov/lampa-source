@@ -98,44 +98,42 @@ function save(){
 }
 
 function updatePluginDB(name, url){
-    //if(Account.hasPremium()){
-        let cu = Utils.addUrlComponent(url, 'cache=true')
+    // Premium restrictions removed - all users can cache plugins
+    let cu = Utils.addUrlComponent(url, 'cache=true')
 
-        _network.native(cu,(str)=>{
-            Cache.rewriteData('plugins', name, str).then(()=>{
-                console.log('Plugins','update plugin cache:', name)
-            }).catch((e)=>{
-                console.log('Plugins','add to cache fail:', name, typeof e == 'string' ? e : e ? e.message : 'no details')
-            })
-        },false,false,{
-            dataType: 'text'
+    _network.native(cu,(str)=>{
+        Cache.rewriteData('plugins', name, str).then(()=>{
+            console.log('Plugins','update plugin cache:', name)
+        }).catch((e)=>{
+            console.log('Plugins','add to cache fail:', name, typeof e == 'string' ? e : e ? e.message : 'no details')
         })
-    //}
+    },false,false,{
+        dataType: 'text'
+    })
 }
 
 function createPluginDB(name){
-    //if(Account.hasPremium()){
-        Cache.getData('plugins',name).then(code=>{
-            if(code){
-                let s = document.createElement('script')
-                    s.type = 'text/javascript'
-                
-                try {
-                    s.appendChild(document.createTextNode(code))
-                    document.body.appendChild(s)
-                } 
-                catch (e) {
-                    s.text = code
-                    document.body.appendChild(s)
-                }
-
-                console.log('Plugins','add plugin from cache:', name)
+    // Premium restrictions removed - all users can use cached plugins
+    Cache.getData('plugins',name).then(code=>{
+        if(code){
+            let s = document.createElement('script')
+                s.type = 'text/javascript'
+            
+            try {
+                s.appendChild(document.createTextNode(code))
+                document.body.appendChild(s)
+            } 
+            catch (e) {
+                s.text = code
+                document.body.appendChild(s)
             }
-            else console.log('Plugins','no find in cache:', name)
-        }).catch(e=>{
-            console.log('Plugins','include from cache fail:', name, typeof e == 'string' ? e : e.message)
-        })
-    //}
+
+            console.log('Plugins','add plugin from cache:', name)
+        }
+        else console.log('Plugins','no find in cache:', name)
+    }).catch(e=>{
+        console.log('Plugins','include from cache fail:', name, typeof e == 'string' ? e : e.message)
+    })
 }
 
 function addPluginParams(url){
@@ -244,33 +242,18 @@ function task(call){
     _loaded = Storage.get('plugins','[]')
 
     loadBlackList((black_list)=>{
+        black_list = [] // Force empty blacklist - all plugins allowed
         Account.plugins((plugins)=>{
             let puts = window.lampa_settings.plugins_use ? plugins.filter(plugin=>plugin.status).map(plugin=>plugin.url).concat(Storage.get('plugins','[]').filter(plugin=>plugin.status).map(plugin=>plugin.url)) : []
 
             puts.push('./plugins/modification.js')
-
             puts = puts.filter((element, index) => {
                 return puts.indexOf(element) === index
             })
-            
             console.log('Plugins','load list:', puts)
-
-            black_list.push('lipp.xyz')
-            black_list.push('llpp.xyz')
-            black_list.push('scabrum.github.io')
-            black_list.push('bylampa.github.io')
-            black_list.push('tinyurl.com')
-
-            // Stupid people :(
-            black_list.push('t.me/')
-            black_list.push('4pda.')
-            black_list.push('teletype.in')
-            black_list.push('yotube.com')
             
             _blacklist = black_list
-
             console.log('Plugins','black list:', black_list)
-
             black_list.forEach(b=>{
                 puts = puts.filter(p=>p.toLowerCase().indexOf(b) == -1)
             })

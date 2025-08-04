@@ -353,9 +353,7 @@ function ready(){
         if(action == 'about'){
             let about = Template.get('about')
 
-            if(window.lampa_settings.white_use){
-                about.find('.about__contacts > div:eq(1)').remove()
-            }
+            // White list restrictions removed - all about info is available
 
             if(Platform.is('android')){
                 about.find('.platform_android').removeClass('hide')

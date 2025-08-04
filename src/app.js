@@ -135,14 +135,14 @@ Arrays.extend(window.lampa_settings,{
     white_use: false,
 
     disable_features: {
-        dmca: false,
+        dmca: true,
         reactions: false,
         discuss: false,
         ai: false,
         subscribe: false,
-        blacklist: false,
+        blacklist: true,
         persons: false,
-        ads: false,
+        ads: true,
         trailers: false,
         install_proxy: false
     },

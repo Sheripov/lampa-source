@@ -47,7 +47,8 @@ function init(){
     html = Template.get('head')
 
     if(!window.lampa_settings.feed) html.find('.open--feed').remove()
-    if(!window.lampa_settings.account_use || window.lampa_settings.disable_features.ads) html.find('.open--premium').remove()
+        // Premium button always removed - no ads or premium needed
+        html.find('.open--premium').remove()
 
     if(window.local_lampa) html.find('.head__logo-icon').append('<span class="head__logo-local">local</span>')
 
@@ -80,7 +81,7 @@ function init(){
             html.find('.open--profile').toggleClass('hide',e.value.token && window.lampa_settings.account_use ? false : true)
         }
         if(e.name == 'account_user'){
-            html.find('.open--premium').toggleClass('hide', Account.hasPremium() || window.lampa_settings.white_use ? true : !Lang.selected(['ru','uk','be']))
+            html.find('.open--premium').toggleClass('hide', Account.hasPremium() ? true : !Lang.selected(['ru','uk','be']))
         }
     })
 
@@ -102,7 +103,7 @@ function init(){
         })
     }
 
-    html.find('.open--premium').toggleClass('hide', Account.hasPremium() || window.lampa_settings.white_use ? true : !Lang.selected(['ru','uk','be'])).on('hover:enter',()=>{
+    html.find('.open--premium').toggleClass('hide', Account.hasPremium() ? true : !Lang.selected(['ru','uk','be'])).on('hover:enter',()=>{
         Modal.open({
             title: '',
             size: 'full',

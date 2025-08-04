@@ -218,8 +218,7 @@ function getUser(){
 
 function checkPremium(){
     let user = user_data || Storage.get('account_user','{}')
-
-    return user.id ? Utils.countDays(Date.now(), user.premium) : 0
+    return true
 }
 
 
@@ -368,23 +367,7 @@ function extensions(call){
     network.timeout(5000)
     network.silent(api() + 'extensions/list',(result)=>{
         if(result.secuses){
-            if(window.lampa_settings.white_use){
-                let forbidden = [
-                    9,
-                    10,
-                    12,
-                    180,
-                    5,
-                    149,
-                    13,
-                    158,
-                    179,
-                ]
-
-                result.results.forEach(elem => {
-                    elem.results = elem.results.filter(plug=>forbidden.indexOf(plug.id) == -1)
-                })
-            }
+            // Whitelist restrictions removed - all extensions are now available
 
             Storage.set('account_extensions',result)
 
@@ -928,8 +911,8 @@ function backup(){
                                         },
                                         success: function (j) {
                                             if(j.secuses){
-                                                if(j.limited) showLimitedAccount()
-                                                else Noty.show(Lang.translate('account_export_secuses'))
+                                                // Limited account checks removed
+                                                Noty.show(Lang.translate('account_export_secuses'))
                                             }
                                             else Noty.show(Lang.translate('account_export_fail'))
 
@@ -1038,23 +1021,13 @@ function showNoAccount(){
 }
 
 function showLimitedAccount(){
-    showModal('account_limited')
+    // Limited account functionality removed - no restrictions
+    console.log('Limited account check bypassed - all features available')
 }
 
 function showCubPremium(){
-    let enabled = Controller.enabled().name
-
-    Modal.open({
-        title: '',
-        html: Template.get('cub_premium'),
-        onBack: ()=>{
-            Modal.close()
-
-            Controller.toggle(enabled)
-        }
-    })
-
-    Modal.render().addClass('modal--cub-premium').find('.modal__content').before('<div class="modal__icon"><svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 32 32"><path d="m2.837 20.977q-.912-5.931-1.825-11.862a.99.99 0 0 1 1.572-.942l5.686 4.264a1.358 1.358 0 0 0 1.945-.333l4.734-7.104a1.263 1.263 0 0 1 2.1 0l4.734 7.1a1.358 1.358 0 0 0 1.945.333l5.686-4.264a.99.99 0 0 1 1.572.942q-.913 5.931-1.825 11.862z" fill="#D8C39A"></svg></div>')
+    // Premium promotion removed - no premium needed
+    console.log('Premium promotion bypassed - all features are free')
 }
 
 function subscribeToTranslation(params = {}, call, error){
@@ -1064,8 +1037,8 @@ function subscribeToTranslation(params = {}, call, error){
         network.timeout(5000)
 
         network.silent(api() + 'notifications/add',(result)=>{
-            if(result.limited) showLimitedAccount()
-            else if(call) call()
+            // Limited account checks removed
+            if(call) call()
         },()=>{
             if(error) error()
         },{
@@ -1166,7 +1139,7 @@ let Account = {
 
 Object.defineProperty(Account, 'hasPremium', {
     value: function() {
-       return checkPremium()
+       return true
     },
     writable: false
 })
